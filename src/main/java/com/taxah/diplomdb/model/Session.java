@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +15,8 @@ import java.util.Map;
 public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private int adminId;
+    private Long id;
+    private Long adminId;
     @OneToMany
     private List<User> membersList;
     @OneToMany

@@ -49,39 +49,60 @@ public class SessionService {
 
         List<User> payFactUsersList = new ArrayList<>();
         payFactUsersList.add(user1);
+        payFactUsersList.add(user4);
         // Создаем факт оплаты
-        PayFact payFact = new PayFact();
-//        payFact.setSession(session);
-        payFact.setUsers(payFactUsersList); // Здесь предполагается, что один пользователь сделал оплату
-        payFact.setAmount(10000.0);
+        PayFact payFact1 = new PayFact();
+        payFact1.setUserData(user1.getFirstname()+" "+user1.getLastname());
+        payFact1.setSessionId(session.getId());
+        payFact1.setUserId(user1.getId());
+        payFact1.setAmount(10000.0);
+        PayFact payFact2 = new PayFact();
+        payFact2.setUserData(user4.getFirstname()+" "+user4.getLastname());
+        payFact2.setSessionId(session.getId());
+        payFact2.setUserId(user4.getId());
+        payFact2.setAmount(20000.0);
         List<PayFact> payFacts = new ArrayList<>();
-        payFacts.add(payFact);
+        payFacts.add(payFact1);
+        payFacts.add(payFact2);
 
-        System.out.println(payFactRepository.save(payFact));
+        System.out.println(payFactRepository.saveAll(payFacts));
         session.setPayFact(payFacts);
-        // Создаем чек
-        Check check = new Check();
-//        check.setSession(session);
-        check.setName("Alcohol");
+        // Создаем чеки
+        Check check1 = new Check();
+        check1.setSessionId(session.getId());
+        check1.setName("Alcohol");
+        Check check2 = new Check();
+        check2.setSessionId(session.getId());
+        check2.setName("food");
+        List<Check> checks = new ArrayList<>();
+        checks.add(check1);
+        checks.add(check2);
 
-
-        System.out.println(checkRepository.save(check));
+        System.out.println(checkRepository.saveAll(checks));
 
         // Создаем записи использования продуктов
         ProductUsing productUsing1 = new ProductUsing();
-//        productUsing1.setCheck(check);
-        productUsing1.setProductName("Alcohol");
+        productUsing1.setCheckId(check1.getId());
+        productUsing1.setProductName("Beer");
         productUsing1.setCost(10000.0);
         productUsing1.setUsers(List.of(user1,user3,user4,user5));
-        List<ProductUsing> productUsingList = new ArrayList<>();
-        productUsingList.add(productUsing1);
-        System.out.println(productUsingRepository.saveAll(productUsingList));
-        check.setProductUsingList(productUsingList);
+        ProductUsing productUsing2 = new ProductUsing();
+        productUsing2.setCheckId(check2.getId());
+        productUsing2.setProductName("Food");
+        productUsing2.setCost(20000.0);
+        productUsing2.setUsers(List.of(user1,user2,user3,user4,user5));
+
+        List<ProductUsing> productUsingList1 = new ArrayList<>();
+        productUsingList1.add(productUsing1);
+        List<ProductUsing> productUsingList2 = new ArrayList<>();
+        productUsingList2.add(productUsing2);
+        System.out.println(productUsingRepository.saveAll(productUsingList1));
+        System.out.println(productUsingRepository.saveAll(productUsingList2));
+        check1.setProductUsingList(productUsingList1);
+        check2.setProductUsingList(productUsingList2);
 
 
-        List<Check> checks = new ArrayList<>();
-        checks.add(check);
-        System.out.println(checkRepository.save(check));
+        System.out.println(checkRepository.saveAll(checks));
         session.setCheckList(checks);
         return sessionRepository.save(session);
     }

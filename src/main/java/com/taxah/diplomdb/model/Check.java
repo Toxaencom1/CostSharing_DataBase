@@ -15,14 +15,12 @@ import java.util.List;
 public class Check {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "session_id")
-//    private Session session;
+    private Long sessionId;
 
     private String name;
 
-    @OneToMany//(mappedBy = "check")
+    @OneToMany
     private List<ProductUsing> productUsingList;
 }

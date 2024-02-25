@@ -15,17 +15,15 @@ import java.util.List;
 public class ProductUsing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "check_id")
-//    private Check check;
+    private Long checkId;
 
     private String productName;
 
     private Double cost;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(
             name = "Product_Using_User",
             joinColumns = @JoinColumn(name = "product_using_id"),

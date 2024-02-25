@@ -15,15 +15,13 @@ import java.util.List;
 public class PayFact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
+    private Long sessionId;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "session_id")
-//    private Session session;
+    private String userData;
 
-    @OneToMany
-    private List<User> users;
+    private Long userId;
 
     private double amount;
 }
