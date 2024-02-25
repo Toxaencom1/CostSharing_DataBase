@@ -20,9 +20,9 @@ public class Session {
     private Long adminId;
     @OneToMany
     private List<User> membersList;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<PayFact> payFact;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Check> checkList;
     @Column(name = "is_closed")
     private boolean isClosed;

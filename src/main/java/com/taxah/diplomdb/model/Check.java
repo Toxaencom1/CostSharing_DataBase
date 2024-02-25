@@ -21,6 +21,6 @@ public class Check {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ProductUsing> productUsingList;
 }
