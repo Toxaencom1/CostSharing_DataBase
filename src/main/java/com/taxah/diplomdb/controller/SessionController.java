@@ -6,7 +6,6 @@ import com.taxah.diplomdb.service.SessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -21,5 +20,10 @@ public class SessionController {
     @PostMapping("/write/session")
     public Session write(@RequestBody Session session){
         return service.writeSession(session);
+    }
+
+    @PostMapping("/user/add")
+    public User addUser(@RequestBody User user){
+        return service.addUser(user);
     }
 }

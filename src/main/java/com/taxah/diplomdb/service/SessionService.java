@@ -14,7 +14,7 @@ public class SessionService {
 
 //    private ProductUsingUserRepository productUsingUserRepository;
     private SessionRepository sessionRepository;
-//    private UserRepository userRepository;
+    private UserRepository userRepository;
 //    private PayFactRepository payFactRepository;
 //    private CheckRepository checkRepository;
 //    private ProductUsingRepository productUsingRepository;
@@ -28,6 +28,10 @@ public class SessionService {
     public Session getSession(Long id){
         Optional<Session> optional = sessionRepository.findById( id.intValue());
         return optional.orElse(null);
+    }
+
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 }
 
