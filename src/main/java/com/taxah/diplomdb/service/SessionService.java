@@ -44,12 +44,8 @@ public class SessionService {
 
         session.setAdminId(user2.getId());
         session.setMembersList(users);
-//        userRepository.save(user1);
         System.out.println(sessionRepository.save(session));
 
-        List<User> payFactUsersList = new ArrayList<>();
-        payFactUsersList.add(user1);
-        payFactUsersList.add(user4);
         // Создаем факт оплаты
         PayFact payFact1 = new PayFact();
         payFact1.setUserData(user1.getFirstname()+" "+user1.getLastname());
@@ -86,6 +82,7 @@ public class SessionService {
         productUsing1.setProductName("Beer");
         productUsing1.setCost(10000.0);
         productUsing1.setUsers(List.of(user1,user3,user4,user5));
+
         ProductUsing productUsing2 = new ProductUsing();
         productUsing2.setCheckId(check2.getId());
         productUsing2.setProductName("Food");
@@ -104,6 +101,6 @@ public class SessionService {
 
         System.out.println(checkRepository.saveAll(checks));
         session.setCheckList(checks);
-        return sessionRepository.save(session);
+        return session;
     }
 }
