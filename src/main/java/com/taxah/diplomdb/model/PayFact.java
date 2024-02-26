@@ -1,9 +1,11 @@
 package com.taxah.diplomdb.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Data
@@ -16,7 +18,10 @@ public class PayFact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long sessionId;
+    @ManyToOne
+    @JoinColumn(name = "session_id")
+    @ToString.Exclude
+    private Session session;
 
     private String userData;
 

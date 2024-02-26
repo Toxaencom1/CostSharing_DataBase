@@ -6,6 +6,8 @@ import com.taxah.diplomdb.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -15,13 +17,44 @@ public class SessionService {
 //    private ProductUsingUserRepository productUsingUserRepository;
     private SessionRepository sessionRepository;
     private UserRepository userRepository;
-//    private PayFactRepository payFactRepository;
-//    private CheckRepository checkRepository;
-//    private ProductUsingRepository productUsingRepository;
+    private PayFactRepository payFactRepository;
+    private CheckRepository checkRepository;
+    private ProductUsingRepository productUsingRepository;
 
 
 
-    public Session writeSession(Session session) {
+    public Session writeSession(Session session,Long admin) {
+        Session session1 = sessionRepository.save(new Session());
+        session.setId(session1.getId());
+
+        session1.setAdminId(admin);
+        Long sessionId = session1.getId();
+        System.out.println("session members = " + session.getMembersList());
+        System.out.println("session id = " + sessionId);
+
+        for (PayFact pf: session.getPayFact()){
+            PayFact payFact = payFactRepository.save(new PayFact());
+            pf.setId(payFact.getId());
+            pf.setSession(session);
+            System.out.println("Payfact id = " + payFact.getId() +" "+ pf);
+//            payFactRepository.save(pf);
+        }
+        List<Check> checks = session.getCheckList();
+        for (Check c : checks){
+            Check check = checkRepository.save(new Check());
+            c.setId(check.getId());
+            c.setSession(session);
+            System.out.println("Check id = " + check.getId()+" "+c);
+            for (ProductUsing p : c.getProductUsingList()){
+                System.out.println("Start");
+                ProductUsing productUsing = productUsingRepository.save(new ProductUsing());
+                p.setId(productUsing.getId());
+                p.setCheck(c);
+                System.out.println("ProductUsing id = " + productUsing.getId()+" "+p);
+                System.out.println("End");
+            }
+        }
+        System.out.println("Session = " + session);
         return sessionRepository.save(session);
     }
 
@@ -32,6 +65,11 @@ public class SessionService {
 
     public User addUser(User user) {
         return userRepository.save(user);
+    }
+
+    public Long myId(Long id){
+        Optional<User> optional = userRepository.findById(Math.toIntExact(id));
+        return optional.map(User::getId).orElse(null);
     }
 }
 

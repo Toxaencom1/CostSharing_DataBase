@@ -19,7 +19,9 @@ public class SessionController {
 
     @PostMapping("/write/session")
     public Session write(@RequestBody Session session){
-        return service.writeSession(session);
+        // TODO переделать получение своего ID
+        Long id = service.myId(2L);
+        return service.writeSession(session,id);
     }
 
     @PostMapping("/user/add")
