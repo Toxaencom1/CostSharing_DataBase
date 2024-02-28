@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -33,4 +34,45 @@ public class Check {
 
     @OneToMany(mappedBy = "check",cascade = CascadeType.ALL)
     private List<ProductUsing> productUsingList;
+
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public Session getSession() {
+//        return session;
+//    }
+//
+//    public void setSession(Session session) {
+//        this.session = session;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public List<ProductUsing> getProductUsingList() {
+//        return productUsingList;
+//    }
+//
+//    public void setProductUsingList(List<ProductUsing> productUsingList) {
+//        this.productUsingList = productUsingList;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Check{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", productUsingList=" + productUsingList +
+//                '}';
+//    }
 }

@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.util.List;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,11 +35,13 @@ public class ProductUsing {
 
     //    @OneToMany
 //    @JoinColumn(name = "product_using_id")
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
+//    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Product_Using_User",
             joinColumns = @JoinColumn(name = "product_using_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> users;
+    private List<TempUser> users;
 }
