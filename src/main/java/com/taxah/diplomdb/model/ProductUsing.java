@@ -32,7 +32,13 @@ public class ProductUsing {
 
     private Double cost;
 
-    @OneToMany
-    @JoinColumn(name = "product_using_id")
+    //    @OneToMany
+//    @JoinColumn(name = "product_using_id")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "Product_Using_User",
+            joinColumns = @JoinColumn(name = "product_using_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
 }

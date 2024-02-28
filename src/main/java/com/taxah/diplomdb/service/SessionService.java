@@ -25,6 +25,8 @@ public class SessionService {
 
     public Session writeSession(Session session,Long admin) {
         Session session1 = sessionRepository.save(new Session());
+        session.setMembersList(null); //TODO доделать memberList и убрать
+
         session.setId(session1.getId());
 
         session1.setAdminId(admin);
