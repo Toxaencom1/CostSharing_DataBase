@@ -33,11 +33,7 @@ public class ProductUsing {
 
     private Double cost;
 
-    //    @OneToMany
-//    @JoinColumn(name = "product_using_id")
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
-//    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Product_Using_User",
             joinColumns = @JoinColumn(name = "product_using_id"),

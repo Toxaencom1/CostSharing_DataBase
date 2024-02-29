@@ -2,6 +2,7 @@ package com.taxah.diplomdb.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class Check {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "session_id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ToString.Exclude
     private Session session;
 
@@ -35,44 +37,11 @@ public class Check {
     @OneToMany(mappedBy = "check",cascade = CascadeType.ALL)
     private List<ProductUsing> productUsingList;
 
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public Session getSession() {
-//        return session;
-//    }
-//
-//    public void setSession(Session session) {
-//        this.session = session;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public List<ProductUsing> getProductUsingList() {
-//        return productUsingList;
-//    }
-//
-//    public void setProductUsingList(List<ProductUsing> productUsingList) {
-//        this.productUsingList = productUsingList;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "Check{" +
-//                "id=" + id +
-//                ", name='" + name + '\'' +
-//                ", productUsingList=" + productUsingList +
-//                '}';
+    public void addProductUsing(ProductUsing pu){
+        productUsingList.add(pu);
+    }
+//    public void addProductUsing(ProductUsing pu, List<TempUser> users){
+//        pu.setUsers(users);
+//        productUsingList.add(pu);
 //    }
 }

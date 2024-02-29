@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,11 +27,16 @@ public class Session {
     private Long adminId;
     @OneToMany
     @JoinColumn(name = "session_id")
-    private List<User> membersList;
+    private List<TempUser> membersList = new ArrayList<>();
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<PayFact> payFact;
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<Check> checkList;
+    private List<PayFact> payFact = new ArrayList<>();
+    @OneToMany(mappedBy = "session", cascade = CascadeType .ALL)
+    private List<Check> checkList = new ArrayList<>();;
     @Column(name = "is_closed")
     private boolean isClosed;
+
+
+    public void addPayFact(PayFact pF) {
+        payFact.add(pF);
+    }
 }
