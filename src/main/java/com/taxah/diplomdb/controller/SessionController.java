@@ -1,10 +1,6 @@
 package com.taxah.diplomdb.controller;
 
-import com.taxah.diplomdb.model.PayFact;
-import com.taxah.diplomdb.model.ProductUsing;
-import com.taxah.diplomdb.model.Session;
-//import com.taxah.diplomdb.model.User;
-import com.taxah.diplomdb.model.TempUser;
+import com.taxah.diplomdb.model.*;
 import com.taxah.diplomdb.model.abstractClasses.Account;
 import com.taxah.diplomdb.model.dto.PayFactDTO;
 import com.taxah.diplomdb.model.dto.ProductUsingDTO;
@@ -17,6 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/db")
 public class SessionController {
     private SessionService service;
 
@@ -35,8 +32,8 @@ public class SessionController {
         return service.addPayFact(p.getTempUserId(),p.getAmount(),p.getSessionId());
     }
 
-    @PostMapping("/session/add/check/{id}")
-    public Long createCheck(@RequestParam String name, @PathVariable(name = "id") Long sessionId){
+    @PostMapping("/session/add/check/{sessionId}")
+    public Long createCheck(@RequestParam String name, @PathVariable Long sessionId){
         return service.createCheck(sessionId, name);
     }
 
@@ -46,8 +43,8 @@ public class SessionController {
 
     }
 
-//    @PostMapping("/user/add")
-//    public User addUser(@RequestBody User user){
-//        return service.addUser(user);
-//    }
+    @PostMapping("/user/add")
+    public User addUser(@RequestBody User user){
+        return service.addUser(user);
+    }
 }
