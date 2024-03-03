@@ -1,7 +1,6 @@
 package com.taxah.diplomdb.controller;
 
 import com.taxah.diplomdb.model.*;
-import com.taxah.diplomdb.model.abstractClasses.Account;
 import com.taxah.diplomdb.model.dto.PayFactDTO;
 import com.taxah.diplomdb.model.dto.ProductUsingDTO;
 import com.taxah.diplomdb.service.SessionService;
@@ -43,8 +42,13 @@ public class SessionController {
 
     }
 
-    @PostMapping("/user/add")
+    @PostMapping("/users/add")
     public User addUser(@RequestBody User user){
         return service.addUser(user);
+    }
+
+    @PostMapping("/users/add/temp_user")
+    public TempUser addGuestMember(@RequestBody TempUser tempUser){
+        return service.addTempUser(tempUser);
     }
 }

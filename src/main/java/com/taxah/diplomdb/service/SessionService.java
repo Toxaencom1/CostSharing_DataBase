@@ -108,4 +108,8 @@ public class SessionService {
         Optional<User> optional = userRepository.findById(Math.toIntExact(id));
         return optional.map(User::getId).orElse(null);
     }
+
+    public TempUser addTempUser(TempUser tempUser) {
+        return tempUserRepository.save(tempUser);
+    }
 }
