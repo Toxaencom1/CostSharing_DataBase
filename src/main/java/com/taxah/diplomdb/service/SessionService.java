@@ -54,9 +54,8 @@ public class SessionService {
             user = optionalTempUser.get();
             PayFact payFact = payFactRepository.save(new PayFact());
             payFact.setSession(session);
-            payFact.setUserData(user.getFirstname() + " " + user.getLastname());
+            payFact.setTempUser(user);
             payFact.setAmount(amount);
-            payFact.setUserId(user.getId());
             session.addPayFact(payFact);
             payFactRepository.save(payFact);
         }

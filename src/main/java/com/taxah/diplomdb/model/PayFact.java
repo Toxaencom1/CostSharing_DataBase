@@ -1,9 +1,7 @@
 package com.taxah.diplomdb.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,9 +25,10 @@ public class PayFact {
     @ToString.Exclude
     private Session session;
 
-    private String userData;
-
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_data")
+    @JsonIdentityReference(alwaysAsId = true)
+    private TempUser tempUser;
 
     private double amount;
 }
