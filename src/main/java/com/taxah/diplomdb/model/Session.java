@@ -29,14 +29,8 @@ public class Session {
     @JoinColumn(name = "session_id")
     private List<TempUser> membersList = new ArrayList<>();
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<PayFact> payFact = new ArrayList<>();
-    @OneToMany(mappedBy = "session", cascade = CascadeType .ALL)
-    private List<Check> checkList = new ArrayList<>();;
+    private List<Check> checkList = new ArrayList<>();
     @Column(name = "is_closed")
     private boolean isClosed;
 
-
-    public void addPayFact(PayFact pF) {
-        payFact.add(pF);
-    }
 }

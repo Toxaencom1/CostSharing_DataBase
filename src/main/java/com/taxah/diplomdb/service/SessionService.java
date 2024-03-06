@@ -36,36 +36,28 @@ public class SessionService {
         }
         session.setMembersList(tempMemberList);
         session.setAdminId(admin);
-        List<PayFact> payFacts = new ArrayList<>();
-        session.setPayFact(payFacts);
         session = sessionRepository.save(session);
         return session.getId();
     }
 
 
-    public List<PayFact> addPayFact(Long userId, Double amount, Long sessionId) {
-        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
-        Optional<TempUser> optionalTempUser = tempUserRepository.findById(userId);
-
-        Session session = null;
-        TempUser user;
-        if (optionalSession.isPresent() && optionalTempUser.isPresent()) {
-            session = optionalSession.get();
-            user = optionalTempUser.get();
-            PayFact payFact = payFactRepository.save(new PayFact());
-            payFact.setSession(session);
-            payFact.setTempUser(user);
+    public PayFact addPayFact(Long checkId, Long tempUserId, Double amount) {
+        Optional<Check> optionalCheck = checkRepository.findById(checkId);
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(tempUserId);
+        PayFact payFact = null;
+        if (optionalCheck.isPresent() && optionalTempUser.isPresent()) {
+            Check check = optionalCheck.get();
+            payFact = payFactRepository.save(new PayFact());
+            payFact.setTempUser(optionalTempUser.get());
             payFact.setAmount(amount);
-            session.addPayFact(payFact);
-            payFactRepository.save(payFact);
+            payFact.setCheck(check);
+            check.setPayFact(payFact);
+            checkRepository.save(check);
         }
-        if (session != null){
-            return session.getPayFact();
-        }
-        return null;
+        return payFact;
     }
 
-    public Long createCheck(Long sessionId, String name){
+    public Long createCheck(Long sessionId, String name) {
         Check check = checkRepository.save(new Check());
         Optional<Session> optionalSession = sessionRepository.findById(sessionId);
         if (optionalSession.isPresent()) {
@@ -77,11 +69,11 @@ public class SessionService {
         return null;
     }
 
-    public List<ProductUsing> addProductUsing(Long checkId, String productName, Double cost, List<TempUser> tempUsers){
+    public List<ProductUsing> addProductUsing(Long checkId, String productName, Double cost, List<TempUser> tempUsers) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
         ProductUsing productUsing = productUsingRepository.save(new ProductUsing());
 
-        if (optionalCheck.isPresent()){
+        if (optionalCheck.isPresent()) {
             Check check = optionalCheck.get();
             productUsing.setCheck(check);
             productUsing.setProductName(productName);

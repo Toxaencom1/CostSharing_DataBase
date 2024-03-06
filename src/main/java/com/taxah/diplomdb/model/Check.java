@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,16 +33,17 @@ public class Check {
     @ToString.Exclude
     private Session session;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pay_fact")
+    private PayFact payFact;
+
     private String name;
 
-    @OneToMany(mappedBy = "check",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "check", cascade = CascadeType.ALL)
     private List<ProductUsing> productUsingList;
 
-    public void addProductUsing(ProductUsing pu){
+    public void addProductUsing(ProductUsing pu) {
         productUsingList.add(pu);
     }
-//    public void addProductUsing(ProductUsing pu, List<TempUser> users){
-//        pu.setUsers(users);
-//        productUsingList.add(pu);
-//    }
+
 }

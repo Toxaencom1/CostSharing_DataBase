@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 
 @Data
@@ -19,11 +18,9 @@ public class PayFact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "session_id")
+    @OneToOne(mappedBy = "payFact")
     @JsonIdentityReference(alwaysAsId = true)
-    @ToString.Exclude
-    private Session session;
+    private Check check;
 
     @ManyToOne
     @JoinColumn(name = "user_data")

@@ -17,38 +17,38 @@ public class SessionController {
     private SessionService service;
 
     @GetMapping("/session/{id}")
-    public Session getSession(@PathVariable Long id){
+    public Session getSession(@PathVariable Long id) {
         return service.getSession(id);
     }
 
     @PostMapping("/session/create/{id}")
-    public Long createNewSession(@RequestBody List<TempUser> accounts, @PathVariable Long id){
-        return service.createSessionAndMembers(accounts,id);
+    public Long createNewSession(@RequestBody List<TempUser> accounts, @PathVariable Long id) {
+        return service.createSessionAndMembers(accounts, id);
     }
 
     @PostMapping("/session/add/payfact")
-    public List<PayFact> addPayFact(@RequestBody PayFactDTO p){
-        return service.addPayFact(p.getTempUserId(),p.getAmount(),p.getSessionId());
+    public PayFact addPayFact(@RequestBody PayFactDTO p) {
+        return service.addPayFact(p.getCheckId(), p.getTempUserId(), p.getAmount());
     }
 
     @PostMapping("/session/add/check/{sessionId}")
-    public Long createCheck(@RequestParam String name, @PathVariable Long sessionId){
+    public Long createCheck(@RequestParam String name, @PathVariable Long sessionId) {
         return service.createCheck(sessionId, name);
     }
 
     @PostMapping("/session/add/productusing")
-    public List<ProductUsing> addProductUsing(@RequestBody ProductUsingDTO p){
-        return service.addProductUsing(p.getCheckId(),p.getProductName(),p.getCost(),p.getTempUsers());
+    public List<ProductUsing> addProductUsing(@RequestBody ProductUsingDTO p) {
+        return service.addProductUsing(p.getCheckId(), p.getProductName(), p.getCost(), p.getTempUsers());
 
     }
 
     @PostMapping("/users/add")
-    public User addUser(@RequestBody User user){
+    public User addUser(@RequestBody User user) {
         return service.addUser(user);
     }
 
     @PostMapping("/users/add/temp_user")
-    public TempUser addGuestMember(@RequestBody TempUser tempUser){
+    public TempUser addGuestMember(@RequestBody TempUser tempUser) {
         return service.addTempUser(tempUser);
     }
 }
