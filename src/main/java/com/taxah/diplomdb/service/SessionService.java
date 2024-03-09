@@ -14,8 +14,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class SessionService {
-
-    //    private ProductUsingUserRepository productUsingUserRepository;
     private SessionRepository sessionRepository;
     private UserRepository userRepository;
     private PayFactRepository payFactRepository;
@@ -102,5 +100,50 @@ public class SessionService {
 
     public TempUser addTempUser(TempUser tempUser) {
         return tempUserRepository.save(tempUser);
+    }
+
+    public Long deleteMember(Long id) {
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
+        if (optionalTempUser.isPresent()) {
+            tempUserRepository.deleteById(id);
+            return optionalTempUser.get().getSessionId();
+        }
+        return null;
+    }
+
+    public Check deletePayFact(Long id) {
+        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
+        if (optionalPayFact.isPresent()) {
+            Check check = optionalPayFact.get().getCheck();
+            check.setPayFact(null);
+            payFactRepository.deleteById(id);
+            return check;
+        }
+        return null;
+    }
+
+    public PayFact updatePayFact(PayFact newPayFact) {
+        System.out.println("Update: " + newPayFact);
+        return payFactRepository.save(newPayFact);
+//        System.out.println(newPayFact);
+//        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
+//        if (optionalPayFact.isPresent()){
+//            System.out.println(optionalPayFact.get());
+//            PayFact oldPayFact = optionalPayFact.get();
+//            oldPayFact.setTempUser(newPayFact.getTempUser());
+//            oldPayFact.setAmount(newPayFact.getAmount());
+//            payFactRepository.save(oldPayFact);
+//        }
+//        return null;
+    }
+
+    public PayFact getPayFact(Long id) {
+        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
+        return optionalPayFact.orElse(null);
+    }
+
+    public TempUser getTempUser(Long id) {
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
+        return optionalTempUser.orElse(null);
     }
 }
