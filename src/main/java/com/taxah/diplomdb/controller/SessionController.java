@@ -47,8 +47,8 @@ public class SessionController {
     }
 
     @PostMapping("/session/add/productusing")
-    public List<ProductUsing> addProductUsing(@RequestBody ProductUsingDTO p) {
-        return service.addProductUsing(p.getCheckId(), p.getProductName(), p.getCost(), p.getTempUsers());
+    public ProductUsing addProductUsing(@RequestBody ProductUsingDTO p) {
+        return service.addProductUsingList(p.getCheckId(), p.getProductName(), p.getCost(), p.getTempUsers());
     }
 
     @PostMapping("/users/add")
@@ -70,6 +70,10 @@ public class SessionController {
     public Long deletePayFact(@PathVariable Long id) {
         Check check = service.deletePayFact(id);
         return check.getSession().getId();
+    }
+    @DeleteMapping("/check/delete/{id}")
+    public Long deleteCheck(@PathVariable Long id){
+        return service.deleteCheck(id);
     }
 
     @PutMapping("/payfact/update")

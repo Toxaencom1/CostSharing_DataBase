@@ -39,19 +39,4 @@ public class TempUser extends Account {
                 "sessionId=" + sessionId +
                 "}";
     }
-
-//    public String getFirstname() {
-//        return super.getFirstname();
-//    }
-//
-//    public void setFirstname(String firstname) {
-//        super.setFirstname(firstname);
-//    }
-//    public String getLastname() {
-//        return super.getLastname();
-//    }
-//
-//    public void setLastname(String firstname) {
-//        super.setLastname(firstname);
-//    }
 }

@@ -67,7 +67,7 @@ public class SessionService {
         return null;
     }
 
-    public List<ProductUsing> addProductUsing(Long checkId, String productName, Double cost, List<TempUser> tempUsers) {
+    public ProductUsing addProductUsingList(Long checkId, String productName, Double cost, List<TempUser> tempUsers) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
         ProductUsing productUsing = productUsingRepository.save(new ProductUsing());
 
@@ -79,7 +79,7 @@ public class SessionService {
             productUsing.setUsers(tempUsers);
             check.addProductUsing(productUsing);
             checkRepository.save(check);
-            return check.getProductUsingList();
+            return productUsing;
         }
         return null;
     }
@@ -145,5 +145,35 @@ public class SessionService {
     public TempUser getTempUser(Long id) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         return optionalTempUser.orElse(null);
+    }
+
+    public Long deleteCheck(Long id) {
+        Optional<Check> optionalCheck = checkRepository.findById(id);
+        if (optionalCheck.isPresent()) {
+            Check check = optionalCheck.get();
+            System.out.println(check);
+            if (check.getPayFact() != null) {
+                PayFact payFact = check.getPayFact();
+                check.setPayFact(null);
+                payFactRepository.delete(payFact);
+            }
+            if (check.getProductUsingList() != null) {
+                List<ProductUsing> productUsingList = check.getProductUsingList();
+                check.setProductUsingList(null);
+                for (ProductUsing productUsing:productUsingList){
+                    productUsing.setCheck(null);
+                    for (TempUser user : productUsing.getUsers()){
+                        user.getProductUsingList().removeIf(p->p.equals(productUsing));
+                    }
+                    productUsingRepository.delete(productUsing);
+                }
+            }
+            Long sessionId = check.getSession().getId();
+            check.setSession(null);
+            checkRepository.deleteById(check.getId());
+            checkRepository.delete(check);
+            return sessionId;
+        }
+        return null;
     }
 }

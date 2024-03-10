@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Data
@@ -20,9 +21,10 @@ public class PayFact {
 
     @OneToOne(mappedBy = "payFact")
     @JsonIdentityReference(alwaysAsId = true)
+    @ToString.Exclude
     private Check check;
 
-    @ManyToOne
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.DETACH})
     @JoinColumn(name = "user_data")
     @JsonIdentityReference(alwaysAsId = true)
     private TempUser tempUser;

@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS my_check
     session_id BIGINT,
     pay_fact    BIGINT,
     name       VARCHAR(255),
-    CONSTRAINT fk_session_check FOREIGN KEY (session_id) REFERENCES my_session (id),
-    CONSTRAINT fk_pay_fact FOREIGN KEY (pay_fact) REFERENCES pay_fact (id)
+    CONSTRAINT fk_session_id FOREIGN KEY (session_id) REFERENCES my_session (id),
+    CONSTRAINT fk_pay_fact FOREIGN KEY (pay_fact) REFERENCES pay_fact (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS product_using
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS product_using
     check_id     BIGINT,
     product_name VARCHAR(255),
     cost         DOUBLE PRECISION,
-    CONSTRAINT fk_check FOREIGN KEY (check_id) REFERENCES my_check (id)
+    CONSTRAINT fk_check FOREIGN KEY (check_id) REFERENCES my_check (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS my_user
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS product_using_user
 (
     user_id          BIGINT,
     product_using_id BIGINT,
-    CONSTRAINT fk_product_using FOREIGN KEY (product_using_id) REFERENCES product_using (id),
+    CONSTRAINT fk_product_using FOREIGN KEY (product_using_id) REFERENCES product_using (id) ON DELETE CASCADE,
     CONSTRAINT fk_user          FOREIGN KEY (user_id) REFERENCES temp_user (id),
     CONSTRAINT pk_product_using_users PRIMARY KEY (product_using_id, user_id)
 );
