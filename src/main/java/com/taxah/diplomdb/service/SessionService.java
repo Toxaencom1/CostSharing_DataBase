@@ -176,4 +176,15 @@ public class SessionService {
         }
         return null;
     }
+
+    public TempUser addTempUserToProduct(TempUser tempUser, Long productUsingId){
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        if (optionalProductUsing.isPresent()){
+            ProductUsing productUsing = optionalProductUsing.get();
+            productUsing.addTempUser(tempUser);
+            productUsingRepository.save(productUsing);
+        }
+        return null;
+
+    }
 }

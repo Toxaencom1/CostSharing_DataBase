@@ -40,4 +40,8 @@ public class ProductUsing {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<TempUser> users;
+
+    public void addTempUser(TempUser tempUser){
+        users.add(tempUser);
+    }
 }

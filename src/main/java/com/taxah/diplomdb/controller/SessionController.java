@@ -61,6 +61,12 @@ public class SessionController {
         return service.addTempUser(tempUser);
     }
 
+    @PostMapping("/productusing/add/{productUsingId}")
+    public Long addTempUserToProduct(@PathVariable Long productUsingId,@RequestBody TempUser tempUser){
+        service.addTempUserToProduct(tempUser,productUsingId);
+        return tempUser.getSessionId();
+    }
+
     @DeleteMapping("/users/delete/{id}")
     public Long deleteMember(@PathVariable Long id) {
         return service.deleteMember(id);
