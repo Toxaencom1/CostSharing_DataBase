@@ -14,6 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class SessionService {
+    private ProductUsingUserRepository productUsingUserRepository;
     private SessionRepository sessionRepository;
     private UserRepository userRepository;
     private PayFactRepository payFactRepository;
@@ -94,7 +95,7 @@ public class SessionService {
     }
 
     public Long myId(Long id) {
-        Optional<User> optional = userRepository.findById(Math.toIntExact(id));
+        Optional<User> optional = userRepository.findById(id);
         return optional.map(User::getId).orElse(null);
     }
 
@@ -105,6 +106,12 @@ public class SessionService {
     public Long deleteMember(Long id) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         if (optionalTempUser.isPresent()) {
+            TempUser tempUser = optionalTempUser.get();
+            for (ProductUsing p:tempUser.getProductUsingList()){
+                p.getUsers().removeIf(u->u.equals(tempUser));
+            }
+            tempUser.setProductUsingList(null);
+            tempUserRepository.saveAndFlush(tempUser);
             tempUserRepository.deleteById(id);
             return optionalTempUser.get().getSessionId();
         }
@@ -123,18 +130,19 @@ public class SessionService {
     }
 
     public PayFact updatePayFact(PayFact newPayFact) {
-        System.out.println("Update: " + newPayFact);
         return payFactRepository.save(newPayFact);
-//        System.out.println(newPayFact);
-//        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
-//        if (optionalPayFact.isPresent()){
-//            System.out.println(optionalPayFact.get());
-//            PayFact oldPayFact = optionalPayFact.get();
-//            oldPayFact.setTempUser(newPayFact.getTempUser());
-//            oldPayFact.setAmount(newPayFact.getAmount());
-//            payFactRepository.save(oldPayFact);
-//        }
-//        return null;
+    }
+
+    public ProductUsing updateProductUsing(ProductUsing newProductUsing){
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(newProductUsing.getId());
+        if (optionalProductUsing.isPresent()){
+            ProductUsing productUsing = optionalProductUsing.get();
+            productUsing.setProductName(newProductUsing.getProductName());
+            productUsing.setCost(newProductUsing.getCost());
+            productUsingRepository.save(productUsing);
+            return productUsing;
+        }
+        return null;
     }
 
     public PayFact getPayFact(Long id) {
@@ -198,5 +206,19 @@ public class SessionService {
         }
         return null;
 
+    }
+
+    public ProductUsing getProductUsing(Long id) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(id);
+        return optionalProductUsing.orElse(null);
+    }
+
+    public Check getCheck(Long id) {
+        Optional<Check> optionalCheck = checkRepository.findById(id);
+        return optionalCheck.orElse(null);
+    }
+
+    public void deleteTempUserFromProduct(TempUser tempUser1, Long productUsingId) {
+        productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser1.getId(),productUsingId);
     }
 }

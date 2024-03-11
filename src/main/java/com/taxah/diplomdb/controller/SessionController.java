@@ -21,6 +21,11 @@ public class SessionController {
         return service.getSession(id);
     }
 
+    @GetMapping("/check/{id}")
+    public Check getCheck(@PathVariable Long id){
+        return service.getCheck(id);
+    }
+
     @GetMapping("/payfact/{id}")
     public PayFact getPayFact(@PathVariable Long id) {
         return service.getPayFact(id);
@@ -29,6 +34,11 @@ public class SessionController {
     @GetMapping("/session/tempuser/{id}")
     public TempUser getTempUser(@PathVariable Long id) {
         return service.getTempUser(id);
+    }
+
+    @GetMapping("/product/{id}")
+    public ProductUsing getProductUsing(@PathVariable Long id){
+        return  service.getProductUsing(id);
     }
 
     @PostMapping("/session/create/{id}")
@@ -87,8 +97,19 @@ public class SessionController {
         service.deleteProduct(productUsingId);
     }
 
+    @DeleteMapping("/productusing/delete/user/{productUsingId}")
+    public void deleteTempUserFromProduct(@PathVariable Long productUsingId,
+                                          @RequestBody TempUser tempUser){
+        service.deleteTempUserFromProduct(tempUser,productUsingId);
+    }
+
     @PutMapping("/payfact/update")
     public PayFact updatePayFact(@RequestBody PayFact payFact) {
         return service.updatePayFact(payFact);
+    }
+
+    @PutMapping("/product/update")
+    public ProductUsing updateProductUsing(@RequestBody ProductUsing productUsing){
+        return service.updateProductUsing(productUsing);
     }
 }

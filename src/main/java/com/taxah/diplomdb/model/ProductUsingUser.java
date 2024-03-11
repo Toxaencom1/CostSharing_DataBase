@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Product_Using_User") // Указываем имя таблицы
+@Table(name = "Product_Using_User")
 public class ProductUsingUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private ProductUsingUserId id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_using_id")
