@@ -177,6 +177,18 @@ public class SessionService {
         return null;
     }
 
+    public void deleteProduct(Long productUsingId){
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        if (optionalProductUsing.isPresent()){
+            ProductUsing productUsing = optionalProductUsing.get();
+            for (TempUser tempUser:productUsing.getUsers()){
+                tempUser.getProductUsingList().removeIf(p->p.equals(productUsing));
+            }
+            productUsing.setUsers(null);
+            productUsingRepository.delete(productUsing);
+        }
+    }
+
     public TempUser addTempUserToProduct(TempUser tempUser, Long productUsingId){
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
         if (optionalProductUsing.isPresent()){

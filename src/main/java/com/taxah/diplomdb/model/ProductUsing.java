@@ -24,7 +24,7 @@ public class ProductUsing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE})
     @JoinColumn(name = "check_id")
     @ToString.Exclude
     private Check check;

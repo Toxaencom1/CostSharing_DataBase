@@ -82,6 +82,11 @@ public class SessionController {
         return service.deleteCheck(id);
     }
 
+    @DeleteMapping("/productusing/delete/{id}")
+    public void deleteProductUsing(@PathVariable(name = "id") Long productUsingId){
+        service.deleteProduct(productUsingId);
+    }
+
     @PutMapping("/payfact/update")
     public PayFact updatePayFact(@RequestBody PayFact payFact) {
         return service.updatePayFact(payFact);
