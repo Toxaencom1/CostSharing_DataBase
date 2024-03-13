@@ -201,8 +201,10 @@ public class SessionService {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
         if (optionalProductUsing.isPresent()){
             ProductUsing productUsing = optionalProductUsing.get();
-            productUsing.addTempUser(tempUser);
-            productUsingRepository.save(productUsing);
+            if (!productUsing.getUsers().contains(tempUser)) {
+                productUsing.addTempUser(tempUser);
+                productUsingRepository.save(productUsing);
+            }
         }
         return null;
 

@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -38,5 +38,21 @@ public class TempUser extends Account {
         return super.toString()+
                 "sessionId=" + sessionId +
                 "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TempUser tempUser)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getSessionId(), tempUser.getSessionId()) &&
+                Objects.equals(getId(), tempUser.getId()) &&
+                Objects.equals(getFirstname(), tempUser.getFirstname()) &&
+                Objects.equals(getLastname(),tempUser.getLastname());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getSessionId(), getProductUsingList());
     }
 }
