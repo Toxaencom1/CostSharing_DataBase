@@ -39,6 +39,19 @@ public class SessionService {
         return session.getId();
     }
 
+    public List<Session> findByName(String sessionName){
+        return sessionRepository.findByNameContainingIgnoreCase(sessionName);
+    }
+
+    public Session createSession(String firstname, String lastname, String sessionName){
+        Session session = sessionRepository.save(new Session());
+        TempUser tempUser = tempUserRepository.save(new TempUser(session.getId(),firstname,lastname));
+        session.setName(sessionName);
+        session.setAdminId(tempUser.getId());
+        session.getMembersList().add(tempUser);
+        return sessionRepository.save(session);
+    }
+
 
     public PayFact addPayFact(Long checkId, Long tempUserId, Double amount) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
@@ -159,7 +172,6 @@ public class SessionService {
         Optional<Check> optionalCheck = checkRepository.findById(id);
         if (optionalCheck.isPresent()) {
             Check check = optionalCheck.get();
-            System.out.println(check);
             if (check.getPayFact() != null) {
                 PayFact payFact = check.getPayFact();
                 check.setPayFact(null);
