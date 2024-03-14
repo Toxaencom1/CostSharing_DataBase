@@ -107,11 +107,6 @@ public class SessionService {
         return userRepository.save(user);
     }
 
-    public Long myId(Long id) {
-        Optional<User> optional = userRepository.findById(id);
-        return optional.map(User::getId).orElse(null);
-    }
-
     public TempUser addTempUser(TempUser tempUser) {
         return tempUserRepository.save(tempUser);
     }

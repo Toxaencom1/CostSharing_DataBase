@@ -68,7 +68,7 @@ public class SessionController {
         return service.getPayFact(id);
     }
 
-    @PostMapping("/payFact/add/")
+    @PostMapping("/payFact/add")
     public PayFact addPayFact(@RequestBody PayFactDTO p) {
         return service.addPayFact(p.getCheckId(), p.getTempUserId(), p.getAmount());
     }
