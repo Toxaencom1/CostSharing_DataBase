@@ -32,7 +32,7 @@ public class SessionController {
         return service.createSessionAndMembers(accounts, id);
     }
 
-    @PostMapping("/session/create/")
+    @PostMapping("/session/create")
     public Session createSession(@RequestParam("firstname") String firstname,
                                  @RequestParam("lastname") String lastname,
                                  @RequestParam("sessionName") String sessionName) {

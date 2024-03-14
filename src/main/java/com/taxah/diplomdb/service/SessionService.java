@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -115,6 +116,12 @@ public class SessionService {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         if (optionalTempUser.isPresent()) {
             TempUser tempUser = optionalTempUser.get();
+            Optional<Session> optionalSession =sessionRepository.findById(tempUser.getId());
+            if (optionalSession.isPresent()){
+                if (Objects.equals(optionalSession.get().getAdminId(), tempUser.getId())){
+                    return null;
+                }
+            }
             for (ProductUsing p:tempUser.getProductUsingList()){
                 p.getUsers().removeIf(u->u.equals(tempUser));
             }
