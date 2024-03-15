@@ -23,7 +23,9 @@ public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "date")
     private LocalDate date = LocalDate.now();
     @Column(name = "admin_id")
     private Long adminId;

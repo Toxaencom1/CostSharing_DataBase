@@ -237,4 +237,16 @@ public class SessionService {
     public void deleteTempUserFromProduct(TempUser tempUser1, Long productUsingId) {
         productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser1.getId(),productUsingId);
     }
+
+    public Long updateMember(Long id,TempUser newTempUser) {
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
+        if (optionalTempUser.isPresent()){
+            TempUser oldTempUser = optionalTempUser.get();
+            oldTempUser.setFirstname(newTempUser.getFirstname());
+            oldTempUser.setLastname(newTempUser.getLastname());
+            tempUserRepository.save(oldTempUser);
+            return oldTempUser.getSessionId();
+        }
+        return null;
+    }
 }

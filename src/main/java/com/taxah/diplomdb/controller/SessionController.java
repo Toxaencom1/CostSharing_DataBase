@@ -123,6 +123,11 @@ public class SessionController {
         return service.deleteMember(id);
     }
 
+    @PutMapping("/tempUser/member/update/{id}")
+    public Long updateMember(@PathVariable Long id, @RequestBody TempUser tempUser){
+        return service.updateMember(id,tempUser);
+    }
+
     @PostMapping("/tempUser/add/{productUsingId}")
     public Long addTempUserToProduct(@PathVariable Long productUsingId, @RequestBody TempUser tempUser) {
         service.addTempUserToProduct(tempUser, productUsingId);
