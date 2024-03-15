@@ -211,19 +211,6 @@ public class SessionService {
         }
     }
 
-    public TempUser addTempUserToProduct(TempUser tempUser, Long productUsingId){
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
-        if (optionalProductUsing.isPresent()){
-            ProductUsing productUsing = optionalProductUsing.get();
-            if (!productUsing.getUsers().contains(tempUser)) {
-                productUsing.addTempUser(tempUser);
-                productUsingRepository.save(productUsing);
-            }
-        }
-        return null;
-
-    }
-
     public ProductUsing getProductUsing(Long id) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(id);
         return optionalProductUsing.orElse(null);
@@ -248,5 +235,33 @@ public class SessionService {
             return oldTempUser.getSessionId();
         }
         return null;
+    }
+
+    public TempUser addTempUserToProduct(TempUser tempUser, Long productUsingId){
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        if (optionalProductUsing.isPresent()){
+            ProductUsing productUsing = optionalProductUsing.get();
+            if (!productUsing.getUsers().contains(tempUser)) {
+                productUsing.addTempUser(tempUser);
+                productUsingRepository.save(productUsing);
+            }
+        }
+        return null;
+
+    }
+
+    public void addAllMembersToProduct(Long productUsingId, Long sessionId) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
+        if (optionalProductUsing.isPresent() && optionalSession.isPresent()){
+            ProductUsing productUsing = optionalProductUsing.get();
+            Session session = optionalSession.get();
+            for (TempUser t : session.getMembersList()){
+                if (!productUsing.getUsers().contains(t)) {
+                    productUsing.addTempUser(t);
+                }
+            }
+            productUsingRepository.save(productUsing);
+        }
     }
 }
