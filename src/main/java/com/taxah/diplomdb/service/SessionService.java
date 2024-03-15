@@ -23,6 +23,8 @@ public class SessionService {
     private ProductUsingRepository productUsingRepository;
     private TempUserRepository tempUserRepository;
 
+
+    //region Session
     public Long createSessionAndMembers(List<TempUser> tempMembers, Long admin) {
         Session session = sessionRepository.save(new Session());
         Long sessionId = session.getId();
@@ -40,19 +42,77 @@ public class SessionService {
         return session.getId();
     }
 
-    public List<Session> findByName(String sessionName){
+    public List<Session> findByName(String sessionName) {
         return sessionRepository.findByNameContainingIgnoreCase(sessionName);
     }
 
-    public Session createSession(String firstname, String lastname, String sessionName){
+    public Session createSession(String firstname, String lastname, String sessionName) {
         Session session = sessionRepository.save(new Session());
-        TempUser tempUser = tempUserRepository.save(new TempUser(session.getId(),firstname,lastname));
+        TempUser tempUser = tempUserRepository.save(new TempUser(session.getId(), firstname, lastname));
         session.setName(sessionName);
         session.setAdminId(tempUser.getId());
         session.getMembersList().add(tempUser);
         return sessionRepository.save(session);
     }
 
+    public Session getSession(Long id) {
+        Optional<Session> optional = sessionRepository.findById(id);
+        return optional.orElse(null);
+    }
+//endregion
+
+    //region Check
+    public Check getCheck(Long id) {
+        Optional<Check> optionalCheck = checkRepository.findById(id);
+        return optionalCheck.orElse(null);
+    }
+
+    public Long createCheck(Long sessionId, String name) {
+        Check check = checkRepository.save(new Check());
+        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
+        if (optionalSession.isPresent()) {
+            check.setSession(optionalSession.get());
+            check.setName(name);
+            checkRepository.save(check);
+            return check.getId();
+        }
+        return null;
+    }
+
+    public Long deleteCheck(Long id) {
+        Optional<Check> optionalCheck = checkRepository.findById(id);
+        if (optionalCheck.isPresent()) {
+            Check check = optionalCheck.get();
+            if (check.getPayFact() != null) {
+                PayFact payFact = check.getPayFact();
+                check.setPayFact(null);
+                payFactRepository.delete(payFact);
+            }
+            if (check.getProductUsingList() != null) {
+                List<ProductUsing> productUsingList = check.getProductUsingList();
+                check.setProductUsingList(null);
+                for (ProductUsing productUsing : productUsingList) {
+                    productUsing.setCheck(null);
+                    for (TempUser user : productUsing.getUsers()) {
+                        user.getProductUsingList().removeIf(p -> p.equals(productUsing));
+                    }
+                    productUsingRepository.delete(productUsing);
+                }
+            }
+            Long sessionId = check.getSession().getId();
+            check.setSession(null);
+            checkRepository.deleteById(check.getId());
+            return sessionId;
+        }
+        return null;
+    }
+//endregion
+
+    //region PayFact
+    public PayFact getPayFact(Long id) {
+        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
+        return optionalPayFact.orElse(null);
+    }
 
     public PayFact addPayFact(Long checkId, Long tempUserId, Double amount) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
@@ -70,16 +130,27 @@ public class SessionService {
         return payFact;
     }
 
-    public Long createCheck(Long sessionId, String name) {
-        Check check = checkRepository.save(new Check());
-        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
-        if (optionalSession.isPresent()) {
-            check.setSession(optionalSession.get());
-            check.setName(name);
-            checkRepository.save(check);
-            return check.getId();
+    public Check deletePayFact(Long id) {
+        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
+        if (optionalPayFact.isPresent()) {
+            Check check = optionalPayFact.get().getCheck();
+            check.setPayFact(null);
+            payFactRepository.deleteById(id);
+            return check;
         }
         return null;
+    }
+
+    public PayFact updatePayFact(PayFact newPayFact) {
+        return payFactRepository.save(newPayFact);
+    }
+
+    //endregion
+
+    //region ProductUsing
+    public ProductUsing getProductUsing(Long id) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(id);
+        return optionalProductUsing.orElse(null);
     }
 
     public ProductUsing addProductUsingList(Long checkId, String productName, Double cost, List<TempUser> tempUsers) {
@@ -99,13 +170,64 @@ public class SessionService {
         return null;
     }
 
-    public Session getSession(Long id) {
-        Optional<Session> optional = sessionRepository.findById(id);
-        return optional.orElse(null);
+    public ProductUsing updateProductUsing(ProductUsing newProductUsing) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(newProductUsing.getId());
+        if (optionalProductUsing.isPresent()) {
+            ProductUsing productUsing = optionalProductUsing.get();
+            productUsing.setProductName(newProductUsing.getProductName());
+            productUsing.setCost(newProductUsing.getCost());
+            productUsingRepository.save(productUsing);
+            return productUsing;
+        }
+        return null;
     }
 
-    public User addUser(User user) {
-        return userRepository.save(user);
+    public void deleteProduct(Long productUsingId) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        if (optionalProductUsing.isPresent()) {
+            ProductUsing productUsing = optionalProductUsing.get();
+            for (TempUser tempUser : productUsing.getUsers()) {
+                tempUser.getProductUsingList().removeIf(p -> p.equals(productUsing));
+            }
+            productUsing.setUsers(null);
+            productUsingRepository.delete(productUsing);
+        }
+    }
+
+    public void deleteTempUserFromProduct(TempUser tempUser1, Long productUsingId) {
+        productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser1.getId(), productUsingId);
+    }
+
+    public void addTempUserToProduct(TempUser tempUser, Long productUsingId) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        if (optionalProductUsing.isPresent()) {
+            ProductUsing productUsing = optionalProductUsing.get();
+            if (!productUsing.getUsers().contains(tempUser)) {
+                productUsing.addTempUser(tempUser);
+                productUsingRepository.save(productUsing);
+            }
+        }
+    }
+
+    public void addAllMembersToProduct(Long productUsingId, Long sessionId) {
+        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
+        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
+        if (optionalProductUsing.isPresent() && optionalSession.isPresent()) {
+            ProductUsing productUsing = optionalProductUsing.get();
+            Session session = optionalSession.get();
+            for (TempUser t : session.getMembersList()) {
+                if (!productUsing.getUsers().contains(t)) {
+                    productUsing.addTempUser(t);
+                }
+            }
+            productUsingRepository.save(productUsing);
+        }
+    }
+
+    //region ProductUsing / TempUser
+    public TempUser getTempUser(Long id) {
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
+        return optionalTempUser.orElse(null);
     }
 
     public TempUser addTempUser(TempUser tempUser) {
@@ -116,14 +238,14 @@ public class SessionService {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         if (optionalTempUser.isPresent()) {
             TempUser tempUser = optionalTempUser.get();
-            Optional<Session> optionalSession =sessionRepository.findById(tempUser.getId());
-            if (optionalSession.isPresent()){
-                if (Objects.equals(optionalSession.get().getAdminId(), tempUser.getId())){
+            Optional<Session> optionalSession = sessionRepository.findById(tempUser.getId());
+            if (optionalSession.isPresent()) {
+                if (Objects.equals(optionalSession.get().getAdminId(), tempUser.getId())) {
                     return null;
                 }
             }
-            for (ProductUsing p:tempUser.getProductUsingList()){
-                p.getUsers().removeIf(u->u.equals(tempUser));
+            for (ProductUsing p : tempUser.getProductUsingList()) {
+                p.getUsers().removeIf(u -> u.equals(tempUser));
             }
             tempUser.setProductUsingList(null);
             tempUserRepository.saveAndFlush(tempUser);
@@ -133,101 +255,9 @@ public class SessionService {
         return null;
     }
 
-    public Check deletePayFact(Long id) {
-        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
-        if (optionalPayFact.isPresent()) {
-            Check check = optionalPayFact.get().getCheck();
-            check.setPayFact(null);
-            payFactRepository.deleteById(id);
-            return check;
-        }
-        return null;
-    }
-
-    public PayFact updatePayFact(PayFact newPayFact) {
-        return payFactRepository.save(newPayFact);
-    }
-
-    public ProductUsing updateProductUsing(ProductUsing newProductUsing){
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(newProductUsing.getId());
-        if (optionalProductUsing.isPresent()){
-            ProductUsing productUsing = optionalProductUsing.get();
-            productUsing.setProductName(newProductUsing.getProductName());
-            productUsing.setCost(newProductUsing.getCost());
-            productUsingRepository.save(productUsing);
-            return productUsing;
-        }
-        return null;
-    }
-
-    public PayFact getPayFact(Long id) {
-        Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
-        return optionalPayFact.orElse(null);
-    }
-
-    public TempUser getTempUser(Long id) {
+    public Long updateMember(Long id, TempUser newTempUser) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
-        return optionalTempUser.orElse(null);
-    }
-
-    public Long deleteCheck(Long id) {
-        Optional<Check> optionalCheck = checkRepository.findById(id);
-        if (optionalCheck.isPresent()) {
-            Check check = optionalCheck.get();
-            if (check.getPayFact() != null) {
-                PayFact payFact = check.getPayFact();
-                check.setPayFact(null);
-                payFactRepository.delete(payFact);
-            }
-            if (check.getProductUsingList() != null) {
-                List<ProductUsing> productUsingList = check.getProductUsingList();
-                check.setProductUsingList(null);
-                for (ProductUsing productUsing:productUsingList){
-                    productUsing.setCheck(null);
-                    for (TempUser user : productUsing.getUsers()){
-                        user.getProductUsingList().removeIf(p->p.equals(productUsing));
-                    }
-                    productUsingRepository.delete(productUsing);
-                }
-            }
-            Long sessionId = check.getSession().getId();
-            check.setSession(null);
-            checkRepository.deleteById(check.getId());
-            checkRepository.delete(check);
-            return sessionId;
-        }
-        return null;
-    }
-
-    public void deleteProduct(Long productUsingId){
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
-        if (optionalProductUsing.isPresent()){
-            ProductUsing productUsing = optionalProductUsing.get();
-            for (TempUser tempUser:productUsing.getUsers()){
-                tempUser.getProductUsingList().removeIf(p->p.equals(productUsing));
-            }
-            productUsing.setUsers(null);
-            productUsingRepository.delete(productUsing);
-        }
-    }
-
-    public ProductUsing getProductUsing(Long id) {
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(id);
-        return optionalProductUsing.orElse(null);
-    }
-
-    public Check getCheck(Long id) {
-        Optional<Check> optionalCheck = checkRepository.findById(id);
-        return optionalCheck.orElse(null);
-    }
-
-    public void deleteTempUserFromProduct(TempUser tempUser1, Long productUsingId) {
-        productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser1.getId(),productUsingId);
-    }
-
-    public Long updateMember(Long id,TempUser newTempUser) {
-        Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
-        if (optionalTempUser.isPresent()){
+        if (optionalTempUser.isPresent()) {
             TempUser oldTempUser = optionalTempUser.get();
             oldTempUser.setFirstname(newTempUser.getFirstname());
             oldTempUser.setLastname(newTempUser.getLastname());
@@ -236,32 +266,10 @@ public class SessionService {
         }
         return null;
     }
+    //endregion
+//endregion
 
-    public TempUser addTempUserToProduct(TempUser tempUser, Long productUsingId){
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
-        if (optionalProductUsing.isPresent()){
-            ProductUsing productUsing = optionalProductUsing.get();
-            if (!productUsing.getUsers().contains(tempUser)) {
-                productUsing.addTempUser(tempUser);
-                productUsingRepository.save(productUsing);
-            }
-        }
-        return null;
-
-    }
-
-    public void addAllMembersToProduct(Long productUsingId, Long sessionId) {
-        Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
-        Optional<Session> optionalSession = sessionRepository.findById(sessionId);
-        if (optionalProductUsing.isPresent() && optionalSession.isPresent()){
-            ProductUsing productUsing = optionalProductUsing.get();
-            Session session = optionalSession.get();
-            for (TempUser t : session.getMembersList()){
-                if (!productUsing.getUsers().contains(t)) {
-                    productUsing.addTempUser(t);
-                }
-            }
-            productUsingRepository.save(productUsing);
-        }
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 }
