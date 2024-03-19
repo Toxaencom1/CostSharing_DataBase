@@ -1,13 +1,9 @@
 package com.taxah.diplomdb.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.taxah.diplomdb.model.abstractClasses.Account;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

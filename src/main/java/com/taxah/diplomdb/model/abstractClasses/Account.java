@@ -2,7 +2,6 @@ package com.taxah.diplomdb.model.abstractClasses;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 
 @Data

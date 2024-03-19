@@ -25,7 +25,7 @@ public class PayFact {
     private Check check;
 
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinColumn(name = "temp_user_id",unique = false)
+    @JoinColumn(name = "temp_user_id")
     @JsonIdentityReference(alwaysAsId = true)
     private TempUser tempUser;
 
