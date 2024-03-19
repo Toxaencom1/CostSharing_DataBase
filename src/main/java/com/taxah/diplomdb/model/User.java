@@ -13,7 +13,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "my_user")
+@Table(name = "my_users")
 public class User extends Account {
     public User(String firstname, String lastname) {
         super(firstname,lastname);

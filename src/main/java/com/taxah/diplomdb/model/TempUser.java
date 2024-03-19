@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "temp_user")
+@Table(name = "temp_users")
 public class TempUser extends Account {
     @Column(name = "session_id")
     private Long sessionId;

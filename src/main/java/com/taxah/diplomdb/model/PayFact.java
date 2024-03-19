@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "pay_fact")
+@Table(name = "pay_facts")
 public class PayFact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class PayFact {
     private Check check;
 
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinColumn(name = "user_data")
+    @JoinColumn(name = "temp_user_id",unique = false)
     @JsonIdentityReference(alwaysAsId = true)
     private TempUser tempUser;
 

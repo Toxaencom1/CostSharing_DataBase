@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +27,6 @@ public abstract class Account {
                 "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                '}';
+                ", ";
     }
 }
