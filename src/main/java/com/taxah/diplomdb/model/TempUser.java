@@ -27,7 +27,6 @@ public class TempUser extends Account {
     )
     private List<ProductUsing> productUsingList;
 
-
     public TempUser(Long sessionId, String firstName, String lastName) {
         super(firstName,lastName);
         this.sessionId = sessionId;
@@ -53,6 +52,6 @@ public class TempUser extends Account {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getSessionId(), getProductUsingList());
+        return Objects.hash(super.hashCode(), getSessionId());
     }
 }

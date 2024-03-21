@@ -2,9 +2,11 @@ package com.taxah.diplomdb.model.abstractClasses;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class Account {
     @Id
@@ -13,8 +15,6 @@ public abstract class Account {
     private String firstname;
     private String lastname;
 
-    public Account() {
-    }
     protected Account(String firstname, String lastname) {
         this.firstname = firstname;
         this.lastname = lastname;
