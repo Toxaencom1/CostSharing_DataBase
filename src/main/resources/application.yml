@@ -1,15 +1,15 @@
-spring:
-#  mvc:
-#    hidden method:
-#      filter:
-#        enabled: true
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: admin
-    password: My@newPassword1
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
 server:
   port: 8068
+spring:
+  application:
+    name: DataBase
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: root
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none

@@ -62,9 +62,3 @@ CREATE TABLE IF NOT EXISTS product_using_user
     CONSTRAINT fk_user          FOREIGN KEY (user_id) REFERENCES temp_users (id) ON DELETE CASCADE,
     CONSTRAINT pk_product_using_users PRIMARY KEY (product_using_id, user_id)
 );
-
--- insert into my_user (firstname,lastname) VALUES ('Alex','Starikov');
--- insert into my_user (firstname,lastname) VALUES ('Anton','Takhayev');
--- insert into my_user (firstname,lastname) VALUES ('Andrew','Tkachenko');
--- insert into my_user (firstname,lastname) VALUES ('Artem','Zhukov');
--- insert into my_user (firstname,lastname) VALUES ('Ruslan','Zelentcov');
