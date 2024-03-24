@@ -9,6 +9,21 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+/**
+ * Class that represents a pay fact.
+ * <p>
+ * Fields:
+ * - id - pay fact id
+ * - check - check for which the pay fact is created
+ * - tempUser - user who paid
+ * - amount - amount of money
+ * <p>
+ * Constructors:
+ * - PayFact(Check check, TempUser tempUser, double amount) - creates a pay fact with the specified check, user, and amount
+ * <p>
+ * Getters and setters for all fields.
+
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

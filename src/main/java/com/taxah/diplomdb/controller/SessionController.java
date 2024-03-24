@@ -9,7 +9,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * Controller that handles requests to the database.
+ * <p>
+ * Methods:
+ * - getSession(Long id) - get session by id
+ * - findByName(String sessionName) - find session by name
+ * - createNewSession(List<TempUser> accounts, Long id) - create session with members
+ * - createSession(String firstname, String lastname, String sessionName) - create session
+ * - addUser(User user) - add user
+ * <p>
+ * - getCheck(Long id) - get check by id
+ * - createCheck(String name, Long sessionId) - create check
+ * - deleteCheck(Long checkId) - delete check
+ * <p>
+ * - getPayFact(Long id) - get pay fact by id
+ * - addPayFact(PayFactDTO p) - add pay fact
+ * - deletePayFact(Long id) - delete pay fact
+ * - updatePayFact(PayFact payFact) - update pay fact
+ * <p>
+ * - getProductUsing(Long id) - get product using by id
+ * - addProductUsing(ProductUsingDTO p) - add product to check
+ * - deleteProductUsing(Long productUsingId) - delete product from check
+ * - updateProductUsing(ProductUsing productUsing) - update product
+ * <p>
+ * - getTempUser(Long id) - get temp user by id
+ * - addMember(TempUser tempUser) - add temp user
+ * - deleteMember(Long id) - delete temp user
+ * - updateMember(Long id, TempUser tempUser) - update temp user
+ * - addTempUserToProduct(Long productUsingId, TempUser tempUser) - add temp user to product
+ * - addAllMembersToProduct(Long productUsingId, Long sessionId) - add all members to product
+ * - deleteTempUserFromProduct(Long productUsingId, TempUser tempUser) - delete temp user from product
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/db")
@@ -106,8 +137,9 @@ public class SessionController {
     public ProductUsing updateProductUsing(@RequestBody ProductUsing productUsing) {
         return service.updateProductUsing(productUsing);
     }
+//endregion
 
-    // region Product using Temp user
+    // region Temp user and Product using / Temp user
     @GetMapping("/tempUser/{id}")
     public TempUser getTempUser(@PathVariable Long id) {
         return service.getTempUser(id);
@@ -124,8 +156,8 @@ public class SessionController {
     }
 
     @PutMapping("/tempUser/member/update/{id}")
-    public Long updateMember(@PathVariable Long id, @RequestBody TempUser tempUser){
-        return service.updateMember(id,tempUser);
+    public Long updateMember(@PathVariable Long id, @RequestBody TempUser tempUser) {
+        return service.updateMember(id, tempUser);
     }
 
     @PostMapping("/tempUser/add/{productUsingId}")
@@ -147,7 +179,5 @@ public class SessionController {
         service.deleteTempUserFromProduct(tempUser, productUsingId);
     }
     //endregion
-//endregion
-
 
 }

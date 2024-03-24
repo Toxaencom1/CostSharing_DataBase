@@ -11,6 +11,24 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that represents a session.
+ * <p>
+ * Fields:
+ * - id - session id
+ * - name - session name
+ * - date - session date
+ * - adminId - admin id
+ * - membersList - list of members of the session
+ * - checkList - list of checks in the session
+ * - isClosed - indicates whether the session is closed
+ * <p>
+ * Constructors:
+ * - Session(String name, Long adminId) - creates a session with the specified name and admin id
+ * <p>
+ * Getters and setters for all fields.
+
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,5 +54,4 @@ public class Session {
     private List<Check> checkList = new ArrayList<>();
     @Column(name = "is_closed")
     private boolean isClosed;
-
 }

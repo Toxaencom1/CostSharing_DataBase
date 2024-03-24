@@ -4,7 +4,19 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Abstract class that represents an account.
+ * <p>
+ * Fields:
+ * - id - account id
+ * - firstname - account firstname
+ * - lastname - account lastname
+ * <p>
+ * Constructors:
+ * - Account(String firstname, String lastname) - creates an account with a firstname and lastname
+ * <p>
+ * Getters and setters for all fields.
+ */
 @Data
 @NoArgsConstructor
 @MappedSuperclass

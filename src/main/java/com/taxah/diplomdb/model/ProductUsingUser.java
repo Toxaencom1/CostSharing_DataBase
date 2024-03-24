@@ -6,6 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Class that represents a many-to-many relation entity to ProductUsing - TempUser.
+ * <p>
+ * Fields:
+ * - id - product using user id
+ * - productUsing - product using
+ * - tempUser - user who used the product
+ * <p>
+ * Constructors:
+ * - ProductUsingUser(ProductUsingUserId id, ProductUsing productUsing, TempUser tempUser) - creates a product using user with the specified id, product using, and user
+ * <p>
+ * Getters and setters for all fields.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

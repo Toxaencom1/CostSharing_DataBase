@@ -11,7 +11,25 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Class that represents a product using.
+ * <p>
+ * Fields:
+ * - id - product using id
+ * - check - check to which the product belongs
+ * - productName - product name
+ * - cost - product cost
+ * - users - list of users who used the product
+ * <p>
+ * Constructors:
+ * - ProductUsing(Check check, String productName, Double cost, List<TempUser> users) - creates a product using with the specified check, product name, cost, and list of users
+ * <p>
+ * Methods:
+ * - addTempUser(TempUser tempUser) - add user to the list of users
+ * <p>
+ * Getters and setters for all fields.
 
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,6 +61,11 @@ public class ProductUsing {
     )
     private List<TempUser> users;
 
+    /**
+     * Adds a user to the list of users.
+     *
+     * @param tempUser - user to add
+     */
     public void addTempUser(TempUser tempUser){
         users.add(tempUser);
     }

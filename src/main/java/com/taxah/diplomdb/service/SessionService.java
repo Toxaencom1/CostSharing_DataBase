@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Service for working with the session, check, pay_fact, product_using, and temp_user entities in the database.
+ */
 @AllArgsConstructor
 @Service
 public class SessionService {
@@ -25,6 +28,14 @@ public class SessionService {
 
 
     //region Session
+    /**
+     * Creates a session with adds members to it. The admin of the session is also added to the session.
+     * <p>
+     * This is debugging method.
+     * @param tempMembers List of members to add to the session.
+     * @param admin       The admin of the session.
+     * @return The id of the created session.
+     */
     public Long createSessionAndMembers(List<TempUser> tempMembers, Long admin) {
         Session session = sessionRepository.save(new Session());
         Long sessionId = session.getId();
@@ -42,10 +53,22 @@ public class SessionService {
         return session.getId();
     }
 
+    /**
+     * Finds a session by its name. Ignores case.
+     * @param sessionName The name of the session to find.
+     * @return List of sessions with the specified name.
+     */
     public List<Session> findByName(String sessionName) {
         return sessionRepository.findByNameContainingIgnoreCase(sessionName);
     }
 
+    /**
+     * Creates a session with the specified name and adds the admin to it.
+     * @param firstname   The first name of the admin.
+     * @param lastname    The last name of the admin.
+     * @param sessionName The name of the session.
+     * @return The created session.
+     */
     public Session createSession(String firstname, String lastname, String sessionName) {
         Session session = sessionRepository.save(new Session());
         TempUser tempUser = tempUserRepository.save(new TempUser(session.getId(), firstname, lastname));
@@ -55,6 +78,11 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
+    /**
+     * Finds a session by its id.
+     * @param id - type long, id of the session.
+     * @return null if the session is not found.
+     */
     public Session getSession(Long id) {
         Optional<Session> optional = sessionRepository.findById(id);
         return optional.orElse(null);
@@ -62,11 +90,23 @@ public class SessionService {
 //endregion
 
     //region Check
+
+    /**
+     * Finds a check by its id.
+     * @param id - type long, id of the check.
+     * @return null if the check is not found.
+     */
     public Check getCheck(Long id) {
         Optional<Check> optionalCheck = checkRepository.findById(id);
         return optionalCheck.orElse(null);
     }
 
+    /**
+     * Creates a check with the specified name and adds it to the session.
+     * @param sessionId - type long, id of the session.
+     * @param name - type String, name of the check.
+     * @return id of the created check.
+     */
     public Long createCheck(Long sessionId, String name) {
         Check check = checkRepository.save(new Check());
         Optional<Session> optionalSession = sessionRepository.findById(sessionId);
@@ -79,6 +119,11 @@ public class SessionService {
         return null;
     }
 
+    /**
+     * Deletes a check by its id. Manual relationship detach.
+     * @param id - type long, id of the check.
+     * @return id of the session to which the check belonged.
+     */
     public Long deleteCheck(Long id) {
         Optional<Check> optionalCheck = checkRepository.findById(id);
         if (optionalCheck.isPresent()) {
@@ -109,11 +154,23 @@ public class SessionService {
 //endregion
 
     //region PayFact
+    /**
+     * Finds a pay fact by its id.
+     * @param id - type long, id of the pay fact.
+     * @return null if the pay fact is not found.
+     */
     public PayFact getPayFact(Long id) {
         Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
         return optionalPayFact.orElse(null);
     }
 
+    /**
+     * Adds a pay fact to the check.
+     * @param checkId - type long, id of the check.
+     * @param tempUserId - type long, id of the user who paid.
+     * @param amount - type double, amount of money.
+     * @return null if the check or user is not found.
+     */
     public PayFact addPayFact(Long checkId, Long tempUserId, Double amount) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(tempUserId);
@@ -130,6 +187,11 @@ public class SessionService {
         return payFact;
     }
 
+    /**
+     * Deletes a pay fact by its id. Manual relationship detach.
+     * @param id - type long, id of the pay fact.
+     * @return id of the check to which the pay fact belonged.
+     */
     public Check deletePayFact(Long id) {
         Optional<PayFact> optionalPayFact = payFactRepository.findById(id);
         if (optionalPayFact.isPresent()) {
@@ -141,6 +203,11 @@ public class SessionService {
         return null;
     }
 
+    /**
+     * Updates a pay fact.
+     * @param newPayFact - type PayFact, new pay fact.
+     * @return updated pay fact.
+     */
     public PayFact updatePayFact(PayFact newPayFact) {
         return payFactRepository.save(newPayFact);
     }
@@ -148,15 +215,27 @@ public class SessionService {
     //endregion
 
     //region ProductUsing
+    /**
+     * Finds a product using by its id.
+     * @param id - type long, id of the product using.
+     * @return null if the product using is not found.
+     */
     public ProductUsing getProductUsing(Long id) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(id);
         return optionalProductUsing.orElse(null);
     }
 
+    /**
+     * Adds a product using to the check.
+     * @param checkId - type long, id of the check.
+     * @param productName - type String, product name.
+     * @param cost - type double, product cost.
+     * @param tempUsers - type List<TempUser>, list of users who used the product.
+     * @return null if the check is not found.
+     */
     public ProductUsing addProductUsingList(Long checkId, String productName, Double cost, List<TempUser> tempUsers) {
         Optional<Check> optionalCheck = checkRepository.findById(checkId);
         ProductUsing productUsing = productUsingRepository.save(new ProductUsing());
-
         if (optionalCheck.isPresent()) {
             Check check = optionalCheck.get();
             productUsing.setCheck(check);
@@ -170,6 +249,11 @@ public class SessionService {
         return null;
     }
 
+    /**
+     * Updates a product using.
+     * @param newProductUsing - type ProductUsing, new product using.
+     * @return updated product using.
+     */
     public ProductUsing updateProductUsing(ProductUsing newProductUsing) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(newProductUsing.getId());
         if (optionalProductUsing.isPresent()) {
@@ -182,6 +266,10 @@ public class SessionService {
         return null;
     }
 
+    /**
+     * Deletes a product using by its id. Manual relationship detach.
+     * @param productUsingId - type long, id of the product using.
+     */
     public void deleteProduct(Long productUsingId) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
         if (optionalProductUsing.isPresent()) {
@@ -194,10 +282,20 @@ public class SessionService {
         }
     }
 
-    public void deleteTempUserFromProduct(TempUser tempUser1, Long productUsingId) {
-        productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser1.getId(), productUsingId);
+    /**
+     * Deletes a user from the product using list.
+     * @param tempUser - type TempUser, user to delete.
+     * @param productUsingId - type long, id of the product using.
+     */
+    public void deleteTempUserFromProduct(TempUser tempUser, Long productUsingId) {
+        productUsingUserRepository.deleteByTempUserIdAndProductUsingId(tempUser.getId(), productUsingId);
     }
 
+    /**
+     * Adds a user to the product using list.
+     * @param tempUser - type TempUser, user to add.
+     * @param productUsingId - type long, id of the product using.
+     */
     public void addTempUserToProduct(TempUser tempUser, Long productUsingId) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
         if (optionalProductUsing.isPresent()) {
@@ -209,6 +307,11 @@ public class SessionService {
         }
     }
 
+    /**
+     * Adds all members of the session to the product using list.
+     * @param productUsingId - type long, id of the product using.
+     * @param sessionId - type long, id of the session.
+     */
     public void addAllMembersToProduct(Long productUsingId, Long sessionId) {
         Optional<ProductUsing> optionalProductUsing = productUsingRepository.findById(productUsingId);
         Optional<Session> optionalSession = sessionRepository.findById(sessionId);
@@ -225,15 +328,30 @@ public class SessionService {
     }
 
     //region ProductUsing / TempUser
+    /**
+     * Finds a temp user by its id.
+     * @param id - type long, id of the temp user.
+     * @return null if the temp user is not found.
+     */
     public TempUser getTempUser(Long id) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         return optionalTempUser.orElse(null);
     }
 
+    /**
+     * Adds a temp user to the session.
+     * @param tempUser - type TempUser, temp user to add.
+     * @return added temp user.
+     */
     public TempUser addTempUser(TempUser tempUser) {
         return tempUserRepository.save(tempUser);
     }
 
+    /**
+     * Deletes a temp user by its id. Manual relationship detach.
+     * @param id - type long, id of the temp user.
+     * @return id of the session to which the temp user belonged.
+     */
     public Long deleteMember(Long id) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         if (optionalTempUser.isPresent()) {
@@ -255,6 +373,12 @@ public class SessionService {
         return null;
     }
 
+    /**
+     * Updates a temp user.
+     * @param id - type long, id of the temp user.
+     * @param newTempUser - type TempUser, new temp user.
+     * @return id of the session to which the temp user belonged.
+     */
     public Long updateMember(Long id, TempUser newTempUser) {
         Optional<TempUser> optionalTempUser = tempUserRepository.findById(id);
         if (optionalTempUser.isPresent()) {
@@ -269,6 +393,11 @@ public class SessionService {
     //endregion
 //endregion
 
+    /**
+     * Adds a user to the database.
+     * @param user - type User, user to add.
+     * @return added user.
+     */
     public User addUser(User user) {
         return userRepository.save(user);
     }

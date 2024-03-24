@@ -12,6 +12,24 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * Class that represents a check.
+ * <p>
+ * Fields:
+ * - id - check id
+ * - session - session to which the check belongs
+ * - payFact - pay fact for the check
+ * - name - check name
+ * - productUsingList - list of products in the check
+ * <p>
+ * Constructors:
+ * - Check(Session session, PayFact payFact, String name, List<ProductUsing> productUsingList) - creates a check with the specified session, pay fact, name, and list of products
+ * <p>
+ * Methods:
+ * - addProductUsing(ProductUsing pu) - add product to the check
+ * <p>
+ * Getters and setters for all fields.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,6 +58,10 @@ public class Check {
     @OneToMany(mappedBy = "check", cascade = CascadeType.ALL)
     private List<ProductUsing> productUsingList;
 
+    /**
+     * Add product to the check
+     * @param pu - ProductUsing
+     */
     public void addProductUsing(ProductUsing pu) {
         productUsingList.add(pu);
     }

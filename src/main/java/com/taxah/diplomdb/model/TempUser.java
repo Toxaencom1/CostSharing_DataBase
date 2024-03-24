@@ -8,6 +8,18 @@ import lombok.*;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class that represents a temporary user.
+ * <p>
+ * Fields:
+ * - sessionId - session id
+ * - productUsingList - list of products used by the user
+ * <p>
+ * Constructors:
+ * - TempUser(Long sessionId, String firstName, String lastName) - creates a temporary user with the specified session id, first name, and last name
+ * <p>
+ * Getters and setters for all fields.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
