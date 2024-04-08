@@ -209,7 +209,15 @@ public class SessionService {
      * @return updated pay fact.
      */
     public PayFact updatePayFact(PayFact newPayFact) {
-        return payFactRepository.save(newPayFact);
+        Optional<PayFact> optionalPayFact = payFactRepository.findById(newPayFact.getId());
+        Optional<TempUser> optionalTempUser = tempUserRepository.findById(newPayFact.getTempUser().getId());
+        if (optionalPayFact.isPresent() && optionalTempUser.isPresent()) {
+            PayFact payFact = optionalPayFact.get();
+            payFact.setTempUser(optionalTempUser.get());
+            payFact.setAmount(newPayFact.getAmount());
+            return payFactRepository.save(payFact);
+        }
+        return null;
     }
 
     //endregion
