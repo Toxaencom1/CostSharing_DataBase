@@ -1,0 +1,15 @@
+server:
+  port: 8068
+spring:
+  application:
+    name: DataBase
+
+  datasource:
+    url: jdbc:postgresql://db:5432/postgres
+    username: root
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
